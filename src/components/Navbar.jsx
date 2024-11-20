@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useCart } from "@/lib/useCart";
+import { useCart } from "@/hooks/useCart";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 function CartCounter() {
   const getTotalItems = useCart((state) => state.getTotalItems);
@@ -36,8 +37,18 @@ export default function Navbar() {
   return (
     <nav className="bg-orange-500 p-4 sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-white text-2xl font-bold">
-          🧁 Sweet Bakery
+        <Link
+          href="/"
+          className="text-white text-2xl font-bold flex gap-2 items-center"
+        >
+          <Image
+            src="/images/logo.webp"
+            alt="Logo"
+            width={70}
+            height={70}
+            className="rounded-full"
+          />{" "}
+          Sweet Bakery
         </Link>
         <div className="flex gap-4">
           <Link href="/" className="text-white hover:text-orange-200">

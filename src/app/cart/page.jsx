@@ -1,5 +1,5 @@
 "use client";
-import { useCart } from "@/lib/useCart";
+import { useCart } from "@/hooks/useCart";
 import Image from "next/image";
 import { useState } from "react";
 

@@ -1,22 +1,26 @@
 // src/app/layout.js
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Navbar from '@/components/Navbar'
+import { Mali } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/Navbar";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
-const inter = Inter({ subsets: ['latin'] })
+const maliFont = Mali({
+  subsets: ["thai"],
+  weight: ["400", "500", "700"], // or alternatively use numbers: [400, 700]
+});
 
 export const metadata = {
-  title: 'Sweet Bakery Shop',
-  description: 'ร้านเบเกอรี่ออนไลน์ที่อร่อยที่สุด',
-}
+  title: "Sweet Bakery Shop",
+  description: "ร้านเบเกอรี่ออนไลน์ที่อร่อยที่สุด",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="th">
-      <body className={inter.className}>
+      <body className={maliFont.className}>
         <Navbar />
         <main className="container mx-auto p-4 mb-14">
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
         </main>
         <footer className="bg-orange-100 p-4 mt-8  fixed bottom-0 w-full">
           <div className="container mx-auto text-center text-orange-800">
@@ -25,5 +29,5 @@ export default function RootLayout({ children }) {
         </footer>
       </body>
     </html>
-  )
+  );
 }

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCart } from "@/lib/useCart"; // เราจะสร้างในขั้นตอนถัดไป
+import { useCart } from "@/hooks/useCart"; // เราจะสร้างในขั้นตอนถัดไป
 
 export default function ProductCard({ product }) {
   const { addToCart, items } = useCart();
