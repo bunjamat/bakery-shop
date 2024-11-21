@@ -54,7 +54,7 @@ export default function Header() {
       <Typography
         as="li"
         variant="paragraph"
-        className="p-1 font-normal text-white hover:text-orange-200"
+        className="p-1 font-normal text-white hover:text-orange-900 "
       >
         <Link href="/" className="flex items-center">
           หน้าแรก
@@ -63,7 +63,7 @@ export default function Header() {
       <Typography
         as="li"
         variant="paragraph"
-        className="p-1 font-normal text-white hover:text-orange-200"
+        className="p-1 font-normal text-white hover:text-orange-900 "
       >
         <Link href="/products" className="flex items-center">
           สินค้า
@@ -72,7 +72,7 @@ export default function Header() {
       <Typography
         as="li"
         variant="paragraph"
-        className="p-1 font-normal text-white hover:text-orange-200"
+        className="p-1 font-normal text-white hover:text-orange-900 "
       >
         <Link href="/cart" className="flex items-center">
           ตะกร้า <CartCounter />

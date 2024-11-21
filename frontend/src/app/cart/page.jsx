@@ -65,7 +65,7 @@ export default function CartPage() {
     type: "success",
   });
   const [customerInfo, setCustomerInfo] = useState({
-    customer_name: "",
+    name: "",
     email: "",
     phone: "",
     address: "",
@@ -88,13 +88,7 @@ export default function CartPage() {
   };
 
   const validateForm = () => {
-    const required = [
-      "customer_name",
-      "email",
-      "phone",
-      "address",
-      "payment_method",
-    ];
+    const required = ["name", "email", "phone", "address", "payment_method"];
     const missing = required.filter((field) => !customerInfo[field]);
     if (missing.length > 0) {
       setShowAlert({
@@ -124,9 +118,9 @@ export default function CartPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...customerInfo,
+          customerInfo,
           items,
-          total_amount: getTotal(),
+          totalAmount: getTotal(),
         }),
       });
 
@@ -183,7 +177,17 @@ export default function CartPage() {
       <Typography variant="h3" className="mb-6">
         ตะกร้าสินค้า
       </Typography>
-
+      {showAlert.show && (
+        <Alert
+          color={showAlert.type === "success" ? "green" : "red"}
+          icon={<AlertCircle className="w-4 h-4" />}
+          dismissible
+          onClose={() => setShowAlert({ show: false })}
+          className="mb-4"
+        >
+          {showAlert.message}
+        </Alert>
+      )}
       {showPaymentModal ? (
         <div className="space-y-6">
           <Card className="p-6">
@@ -194,8 +198,8 @@ export default function CartPage() {
               <Input
                 type="text"
                 label="ชื่อ-นามสกุล"
-                name="customer_name"
-                value={customerInfo.customer_name}
+                name="name"
+                value={customerInfo.name}
                 onChange={handleInputChange}
               />
               <Input
@@ -249,17 +253,7 @@ export default function CartPage() {
               ))}
             </div>
           </Card>
-          {showAlert.show && (
-            <Alert
-              color={showAlert.type === "success" ? "green" : "red"}
-              icon={<AlertCircle className="w-4 h-4" />}
-              dismissible
-              onClose={() => setShowAlert({ show: false })}
-              className="mb-4"
-            >
-              {showAlert.message}
-            </Alert>
-          )}
+
           <Card className="bg-orange-50">
             <CardBody>
               <div className="flex justify-between mb-4">
@@ -352,14 +346,14 @@ export default function CartPage() {
 
 const CartItem = ({ item, onQuantityChange, onRemove, getFormattedPrice }) => {
   const handleQuantityChange = (newQuantity) => {
-    if (newQuantity >= 1 && newQuantity <= 99) {
+    if (newQuantity >= 1 && newQuantity <= item.stock_quantity) {
       onQuantityChange(item.id, newQuantity);
     }
   };
 
   return (
     <Card className="p-4">
-      <CardBody className="flex items-center gap-4 p-0">
+      <CardBody className="flex items-center gap-4 p-0 flex-col md:flex-row">
         <div className="relative w-24 h-24 flex-shrink-0">
           <Image
             src={item.image_url}
@@ -376,6 +370,9 @@ const CartItem = ({ item, onQuantityChange, onRemove, getFormattedPrice }) => {
           <Typography color="orange" className="font-bold">
             {getFormattedPrice(item.price)}
           </Typography>
+          <Typography color="gray" className="text-sm">
+            สต็อก: {item.stock_quantity}
+          </Typography>
         </div>
 
         <div className="flex items-center gap-2">
@@ -385,6 +382,7 @@ const CartItem = ({ item, onQuantityChange, onRemove, getFormattedPrice }) => {
             size="sm"
             className="rounded-full w-8 h-8 p-0 shadow-md hover:shadow-lg transition-all"
             onClick={() => handleQuantityChange(item.quantity - 1)}
+            disabled={item.quantity <= 1}
           >
             <Minus className="w-4 h-4" />
           </IconButton>
@@ -399,6 +397,7 @@ const CartItem = ({ item, onQuantityChange, onRemove, getFormattedPrice }) => {
             size="sm"
             className="rounded-full w-8 h-8 p-0 shadow-md hover:shadow-lg transition-all"
             onClick={() => handleQuantityChange(item.quantity + 1)}
+            disabled={item.quantity >= item.stock_quantity}
           >
             <Plus className="w-4 h-4" />
           </IconButton>

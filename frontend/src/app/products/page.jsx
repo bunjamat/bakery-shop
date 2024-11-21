@@ -5,6 +5,10 @@ import ProductCard from "@/components/ProductCard";
 import { useCart } from "@/hooks/useCart";
 import { products } from "@/data/prducts";
 import SearchBar from "@/components/SearchBar";
+import { useProducts } from "@/hooks/useProducts";
+import useSWR from "swr";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { fetcher } from "@/lib/fetch";
 
 const caterories = [
   { id: 1, name: "เค้ก" },
@@ -15,9 +19,12 @@ const caterories = [
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const { items } = useCart();
+
+  const { data: products, isLoading } = useSWR("/products", fetcher);
 
   // throw new Error("Function not implemented.");
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div>
@@ -52,9 +59,9 @@ export default function ProductsPage() {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
-        {products
-          .filter(
+      <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+        {products?.data
+          ?.filter(
             (product) =>
               selectedCategory === "all" ||
               product.category_name === selectedCategory

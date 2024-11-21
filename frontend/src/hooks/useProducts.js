@@ -1,15 +1,16 @@
 // src/hooks/useProducts.js
+// import { api, axiosInstance } from "@/lib/axios";
 import useSWR from "swr";
-import { api } from "../lib/api";
+
 
 export const useProducts = () => {
   const { data, error, isLoading, mutate } = useSWR(
     "products",
-    api.getProducts
+    axiosInstance.get('/products')
   );
 
   return {
-    products: data,
+    products: data || [],
     isLoading,
     isError: error,
     mutate, // ใช้สำหรับ revalidate ข้อมูล
