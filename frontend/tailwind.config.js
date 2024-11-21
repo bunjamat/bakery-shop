@@ -9,6 +9,10 @@ module.exports = withMT({
         foreground: "var(--foreground)",
       },
     },
+    fontFamily: {
+      sans: ["Mali", "sans-serif"],
+
+    },
   },
   plugins: [],
 });

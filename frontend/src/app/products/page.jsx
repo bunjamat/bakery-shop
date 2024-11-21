@@ -52,7 +52,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
         {products
           .filter(
             (product) =>
@@ -66,4 +66,3 @@ export default function ProductsPage() {
     </div>
   );
 }
-

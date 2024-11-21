@@ -3,12 +3,13 @@ import { Mali } from "next/font/google";
 import "./globals.css";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import MaterialTailwindProvider from "@/components/providers/MaterialTailwindProvider";
-import NavbarComponent from "@/components/Navbar";
+import Header from "@/components/layout/Header";
 
-const maliFont = Mali({
+const mali = Mali({
   subsets: ["thai"],
-  weight: ["400", "500", "700"], // or alternatively use numbers: [400, 700]
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
+  variable: "--font-mali",
 });
 
 export const metadata = {
@@ -18,21 +19,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="th" suppressHydrationWarning>
-      <body
-        className={`${maliFont.className} dark:bg-gray-900 dark:text-white transition-colors`}
-      >
-        <MaterialTailwindProvider>
-          <NavbarComponent />
-          <main className="container mx-auto p-4 mb-14">
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </main>
-          <footer className="bg-orange-100 dark:bg-gray-800 p-4 mt-8 fixed bottom-0 w-full">
-            <div className="container mx-auto text-center text-orange-800 dark:text-orange-200">
-              © 2024 Sweet Bakery Shop
-            </div>
-          </footer>
-        </MaterialTailwindProvider>
+    <html lang="th" className={`${mali.variable}`}>
+      <body className={` dark:bg-gray-900 dark:text-white transition-colors `}>
+        <Header />
+        <main className="container mx-auto p-4 mb-14">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
+        <footer className="bg-orange-100 dark:bg-gray-800 p-4 mt-8 fixed bottom-0 w-full">
+          <div className="container mx-auto text-center text-orange-800 dark:text-orange-200">
+            © 2024 Sweet Bakery Shop By Thongchai Bunjamat
+          </div>
+        </footer>
       </body>
     </html>
   );
