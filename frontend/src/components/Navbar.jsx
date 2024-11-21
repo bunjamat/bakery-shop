@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useCart } from "@/hooks/useCart";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import ThemeToggle from "./ThemeToggle";
 
 function CartCounter() {
   const getTotalItems = useCart((state) => state.getTotalItems);
@@ -50,7 +51,7 @@ export default function Navbar() {
           />{" "}
           Sweet Bakery
         </Link>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <Link href="/" className="text-white hover:text-orange-200">
             หน้าแรก
           </Link>
@@ -58,8 +59,9 @@ export default function Navbar() {
             สินค้า
           </Link>
           <Link href="/cart" className="text-white hover:text-orange-200">
-            🛒 ตะกร้า <CartCounter />
+            ตะกร้า <CartCounter />
           </Link>
+          <ThemeToggle />
         </div>
       </div>
     </nav>

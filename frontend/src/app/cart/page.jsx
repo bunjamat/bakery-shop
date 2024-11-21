@@ -1,12 +1,38 @@
 "use client";
-import { useCart } from "@/hooks/useCart";
+import { useCart, getFormattedPrice } from "@/hooks/useCart";
 import Image from "next/image";
 import { useState } from "react";
+import Link from "next/link";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  IconButton,
+  Input,
+  Alert,
+  Spinner,
+} from "@material-tailwind/react";
+import {
+  ShoppingBag,
+  Trash2,
+  Plus,
+  Minus,
+  AlertCircle,
+  ShoppingBasket,
+} from "lucide-react";
 
 export default function CartPage() {
-  const { items, updateQuantity, removeFromCart, getTotal, clearCart } =
-    useCart();
+  const { items, updateQuantity, removeFromCart, getTotal, clearCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showAlert, setShowAlert] = useState({ show: false, message: '', type: 'success' });
+
+  const handleQuantityChange = (itemId, newQuantity) => {
+    if (newQuantity >= 1 && newQuantity <= 99) {
+      updateQuantity(itemId, newQuantity);
+    }
+  };
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
@@ -19,20 +45,26 @@ export default function CartPage() {
         body: JSON.stringify({
           items,
           total: getTotal(),
-          customerInfo: {
-            // ในโปรเจคจริงควรเพิ่มข้อมูลลูกค้าที่นี่
-          },
+          customerInfo: {},
         }),
       });
 
       if (response.ok) {
-        alert("สั่งซื้อสำเร็จ!");
+        setShowAlert({
+          show: true,
+          message: 'สั่งซื้อสำเร็จ! ขอบคุณที่ใช้บริการ',
+          type: 'success'
+        });
         clearCart();
       } else {
         throw new Error("เกิดข้อผิดพลาดในการสั่งซื้อ");
       }
     } catch (error) {
-      alert(error.message);
+      setShowAlert({
+        show: true,
+        message: error.message,
+        type: 'error'
+      });
     } finally {
       setIsCheckingOut(false);
     }
@@ -40,83 +72,138 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold mb-4">ตะกร้าสินค้าว่างเปล่า</h2>
-        <p className="text-gray-600 mb-4">กรุณาเลือกสินค้าที่ต้องการก่อน</p>
-        <a href="/products" className="text-orange-500 hover:text-orange-600">
-          กลับไปเลือกสินค้า
-        </a>
-      </div>
+      <Card className="max-w-lg mx-auto mt-12">
+        <CardBody className="text-center">
+          <ShoppingBasket className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+          <Typography variant="h4" color="blue-gray" className="mb-2">
+            ตะกร้าสินค้าว่างเปล่า
+          </Typography>
+          <Typography color="gray" className="mb-6">
+            กรุณาเลือกสินค้าที่ต้องการก่อน
+          </Typography>
+          <Link href="/products">
+            <Button
+              variant="gradient"
+              color="orange"
+              className="flex items-center gap-2 mx-auto"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              กลับไปเลือกสินค้า
+            </Button>
+          </Link>
+        </CardBody>
+      </Card>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">ตะกร้าสินค้า</h1>
+    <div className="max-w-4xl mx-auto p-4">
+      {showAlert.show && (
+        <Alert
+          color={showAlert.type === 'success' ? "green" : "red"}
+          icon={<AlertCircle className="w-4 h-4" />}
+          dismissible
+          onClose={() => setShowAlert({ show: false })}
+          className="mb-4"
+        >
+          {showAlert.message}
+        </Alert>
+      )}
 
-      {/* รายการสินค้า */}
+      <Typography variant="h3" className="mb-6">
+        ตะกร้าสินค้า
+      </Typography>
+
       <div className="space-y-4 mb-8">
         {items.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center gap-4 border rounded-lg p-4"
-          >
-            <div className="relative w-24 h-24">
-              <Image
-                src={item.image_url}
-                alt={item.name}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="rounded-lg object-cover"
-              />
-            </div>
+          <Card key={item.id} className="p-4">
+            <CardBody className="flex items-center gap-4 p-0">
+              <div className="relative w-24 h-24 flex-shrink-0">
+                <Image
+                  src={item.image_url}
+                  alt={item.name}
+                  fill
+                  priority
+                  sizes="96px"
+                  className="rounded-lg object-cover"
+                />
+              </div>
 
-            <div className="flex-1">
-              <h3 className="font-bold">{item.name}</h3>
-              <p className="text-gray-600">{item.price} บาท</p>
-            </div>
+              <div className="flex-1">
+                <Typography variant="h6">{item.name}</Typography>
+                <Typography color="orange" className="font-bold">
+                  {getFormattedPrice(item.price)}
+                </Typography>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                className="px-2 py-1 border rounded"
+              <div className="flex items-center gap-2">
+                <IconButton
+                  variant="text"
+                  color="orange"
+                  size="sm"
+                  onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                >
+                  <Minus className="w-4 h-4" />
+                </IconButton>
+                
+                <Input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                  className="!w-16 text-center"
+                  containerProps={{ className: "!min-w-0" }}
+                />
+
+                <IconButton
+                  variant="text"
+                  color="orange"
+                  size="sm"
+                  onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                >
+                  <Plus className="w-4 h-4" />
+                </IconButton>
+              </div>
+
+              <IconButton
+                variant="text"
+                color="red"
+                onClick={() => removeFromCart(item.id)}
               >
-                -
-              </button>
-              <span className="w-8 text-center">{item.quantity}</span>
-              <button
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                className="px-2 py-1 border rounded"
-              >
-                +
-              </button>
-            </div>
-
-            <button
-              onClick={() => removeFromCart(item.id)}
-              className="text-red-500 hover:text-red-600"
-            >
-              ลบ
-            </button>
-          </div>
+                <Trash2 className="w-4 h-4" />
+              </IconButton>
+            </CardBody>
+          </Card>
         ))}
       </div>
 
-      {/* สรุปยอด */}
-      <div className="bg-orange-50 rounded-lg p-6 mb-8">
-        <div className="flex justify-between mb-4">
-          <span>ยอดรวม</span>
-          <span className="font-bold">{getTotal()} บาท</span>
-        </div>
-        <button
-          onClick={handleCheckout}
-          disabled={isCheckingOut}
-          className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 disabled:opacity-50"
-        >
-          {isCheckingOut ? "กำลังดำเนินการ..." : "ยืนยันการสั่งซื้อ"}
-        </button>
-      </div>
+      <Card className="bg-orange-50">
+        <CardBody>
+          <div className="flex justify-between mb-4">
+            <Typography>ยอดรวม</Typography>
+            <Typography className="font-bold">
+              {getFormattedPrice(getTotal())}
+            </Typography>
+          </div>
+        </CardBody>
+        <CardFooter className="pt-0">
+          <Button
+            size="lg"
+            variant="gradient"
+            color="orange"
+            fullWidth
+            onClick={handleCheckout}
+            disabled={isCheckingOut}
+            className="flex items-center justify-center gap-2"
+          >
+            {isCheckingOut ? (
+              <Spinner className="w-4 h-4" />
+            ) : (
+              <ShoppingBag className="w-4 h-4" />
+            )}
+            {isCheckingOut ? "กำลังดำเนินการ..." : "ยืนยันการสั่งซื้อ"}
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
