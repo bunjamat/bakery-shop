@@ -3,7 +3,6 @@ import { Mali } from "next/font/google";
 import "./globals.css";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import ThemeProvider from "@/components/ThemeProvider";
 import MaterialTailwindProvider from "@/components/providers/MaterialTailwindProvider";
 import NavbarComponent from "@/components/Navbar";
 
@@ -20,8 +19,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="th" suppressHydrationWarning>
-      <body className={`${maliFont.className} dark:bg-gray-900 dark:text-white transition-colors`}>
-      <MaterialTailwindProvider>
+      <body
+        className={`${maliFont.className} dark:bg-gray-900 dark:text-white transition-colors`}
+      >
+        <MaterialTailwindProvider>
           <NavbarComponent />
           <main className="container mx-auto p-4 mb-14">
             <ErrorBoundary>{children}</ErrorBoundary>
