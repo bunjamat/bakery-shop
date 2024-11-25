@@ -112,7 +112,7 @@ export default function CartPage() {
 
     setIsCheckingOut(true);
     try {
-      const response = await fetch("http://localhost:3001/orders", {
+      const response = await fetch("http://localhost:8000/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
