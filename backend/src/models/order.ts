@@ -83,7 +83,20 @@ const OrderModel = {
       items,
     };
   },
-
+  // ดึงข้อมูลออเดอร์ทั้งหมด
+  async findAll() {
+    const [orders]: any = await pool.query(
+      `SELECT o.*, 
+        COUNT(oi.id) as total_items,
+        GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') as product_names
+       FROM orders o
+       LEFT JOIN order_items oi ON o.id = oi.order_id
+       LEFT JOIN products p ON oi.product_id = p.id
+       GROUP BY o.id
+       ORDER BY o.created_at DESC`
+    );
+    return orders;
+  },
   // อัพเดทสถานะออเดอร์
   async updateStatus(id, status) {
     const [result]: any = await pool.query(
