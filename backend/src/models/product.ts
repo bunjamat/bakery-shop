@@ -1,4 +1,4 @@
-import pool from "../db";
+import pool from '../db';
 
 const ProductModel = {
   // ดึงสินค้าทั้งหมด
@@ -15,7 +15,7 @@ const ProductModel = {
   // ดึงสินค้าตาม ID
   async findById(id) {
     const [rows] = await pool.query(
-      "SELECT * FROM products WHERE id = ? AND is_available = true",
+      'SELECT * FROM products WHERE id = ? AND is_available = true',
       [id]
     );
     return rows[0] || null;

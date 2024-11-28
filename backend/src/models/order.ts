@@ -1,4 +1,4 @@
-import pool from "../db";
+import pool from '../db';
 
 const OrderModel = {
   // สร้างออเดอร์ใหม่
@@ -49,7 +49,7 @@ const OrderModel = {
       await connection.commit();
 
       const [order]: any = await connection.query(
-        "SELECT * FROM orders WHERE id = ?",
+        'SELECT * FROM orders WHERE id = ?',
         [orderId]
       );
       return order[0];
@@ -64,7 +64,7 @@ const OrderModel = {
   // ดึงข้อมูลออเดอร์และรายละเอียด
   async findById(id) {
     const [orders]: any = await pool.query(
-      "SELECT * FROM orders WHERE id = ?",
+      'SELECT * FROM orders WHERE id = ?',
       [id]
     );
     if (orders.length === 0) return null;
@@ -100,13 +100,13 @@ const OrderModel = {
   // อัพเดทสถานะออเดอร์
   async updateStatus(id, status) {
     const [result]: any = await pool.query(
-      "UPDATE orders SET status = ? WHERE id = ?",
+      'UPDATE orders SET status = ? WHERE id = ?',
       [status, id]
     );
 
     if (result.affectedRows === 0) return null;
 
-    const [orders] = await pool.query("SELECT * FROM orders WHERE id = ?", [
+    const [orders] = await pool.query('SELECT * FROM orders WHERE id = ?', [
       id,
     ]);
     return orders[0];

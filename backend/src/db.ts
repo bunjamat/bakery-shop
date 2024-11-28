@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise'
+import mysql from 'mysql2/promise';
 
 // สร้าง connection pool
 const pool = mysql.createPool({
@@ -8,7 +8,7 @@ const pool = mysql.createPool({
   database: 'bakery_shop',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
-})
+  queueLimit: 0,
+});
 
-export default pool
+export default pool;
